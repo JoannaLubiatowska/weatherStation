@@ -15,11 +15,13 @@ complete transactions with the DB  -->
 		<!-- Driver for DB database -->
 		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 		<!-- URL for DB -->
-		<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/DB" />
+		<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/weatherstation?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" />
 		<!-- Username -->
 		<property name="javax.persistence.jdbc.user" value="admin" />
 		<!-- Password -->
 		<property name="javax.persistence.jdbc.password" value="praktyka" />
+
+		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 	</properties>
 </persistence-unit>
 </persistence>

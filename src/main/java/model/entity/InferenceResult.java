@@ -1,6 +1,6 @@
 package model.entity;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,16 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Table(name = "InferenceResult", uniqueConstraints = { @UniqueConstraint(columnNames = { "inferenceResultsID" }) })
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "InferenceResults", uniqueConstraints = { @UniqueConstraint(columnNames = { "inferenceResultsID" }) })
 public class InferenceResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int inferenceResultsID;
     private String inferenceResultsName;
     private String inferenceResultsDescription;
-    @OneToMany(mappedBy = "InferenceResult", cascade = CascadeType.PERSIST)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "inferenceResult", cascade = CascadeType.PERSIST)
     private final List<WeatherCondition> weatherConditionsList = new ArrayList<>();
 }

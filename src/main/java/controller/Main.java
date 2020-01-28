@@ -26,8 +26,8 @@ public class Main {
     private static void loadWeatherConditionData() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("weatherStationMavenWebapp");
         EntityManager em = factory.createEntityManager();
-        weatherCondition = em.createQuery("SELECT * FROM WeatherCondition", WeatherCondition.class).getResultList();
-        weatherCondition.stream().forEach(System.out::println);
+        weatherCondition = em.createQuery("SELECT d FROM WeatherCondition d", WeatherCondition.class).getResultList();
+        weatherCondition.forEach(System.out::println);
         em.close();
     }
 

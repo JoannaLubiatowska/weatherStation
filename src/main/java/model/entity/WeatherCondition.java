@@ -1,14 +1,19 @@
 package model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Data
 @Builder
 @Entity
-@Table(name = "WeatherCondition", uniqueConstraints = { @UniqueConstraint(columnNames = { "weatherConditionsID" }) })
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "WeatherConditions", uniqueConstraints = { @UniqueConstraint(columnNames = { "weatherConditionsID" }) })
 public class WeatherCondition {
 
     @Id
@@ -19,5 +24,6 @@ public class WeatherCondition {
     private double airHumidity;
     private double airPressure;
     @ManyToOne
+    @JoinColumn(name = "inferenceResultsID")
     private InferenceResult inferenceResult;
 }
