@@ -13,7 +13,14 @@ public class Main {
 
     public static void main(String[] args) {
         loadWeatherConditionData();
-        BayesClassifier classifier = new BayesClassifier();
+//        ClassificationProblem problem = DataNormalizationProcesor.getClassification(weatherCondition);
+//
+//        BayesClassifier classifier = new BayesClassifier();
+//        classifier.configure(problem.getTrainingSet());
+//        System.out.println(classifier);
+//
+//        problem.getTestSet().forEach(classifier::classify);
+//        System.out.println(problem.getTestSet());
     }
 
     private static void loadWeatherConditionData() {
@@ -23,4 +30,6 @@ public class Main {
         weatherCondition.stream().forEach(System.out::println);
         em.close();
     }
+
+
 }
