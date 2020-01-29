@@ -10,14 +10,14 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         List<WeatherCondition> weatherCondition = loadWeatherConditionData();
-        ClassificationProblem problem = DataNormalizationProcesor.getClassification(weatherCondition);
-
-        BayesClassifier classifier = new BayesClassifier();
-        classifier.configure(problem.getTrainingSet());
-        System.out.println(classifier);
-
-        problem.getTestSet().forEach(classifier::classify);
-        System.out.println(problem.getTestSet());
+//        ClassificationProblem problem = DataNormalizationProcesor.getClassification(weatherCondition);
+//
+//        BayesClassifier classifier = new BayesClassifier();
+//        classifier.configure(problem.getTrainingSet());
+//        System.out.println(classifier);
+//
+//        problem.getTestSet().forEach(classifier::classify);
+//        System.out.println(problem.getTestSet());
     }
 
     private static List<WeatherCondition> loadWeatherConditionData() {

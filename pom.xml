@@ -40,12 +40,31 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <developers>
+        <developer>
+            <id>JL</id>
+            <name>Joanna Lubiatowska</name>
+            <organization>PŁ</organization>
+            <organizationUrl>http://www.weeia.p.lodz.pl</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <build>
         <finalName>weatherStation</finalName>

@@ -22,6 +22,5 @@ public class NormalizedWeatherCondition {
         this.temperature = temperature;
         this.airHumidity = airHumidity;
         this.airPressure = airPressure;
-        this.inference = null;
     }
 }
