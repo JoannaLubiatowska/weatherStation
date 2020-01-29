@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MainWindowServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("Joanna");
-        response.getWriter().write("Hello " + name);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+          response.getWriter().write("Hello ");
     }
 }

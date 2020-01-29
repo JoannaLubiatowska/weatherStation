@@ -4,12 +4,4 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-<servlet>
-  <servlet-name>Hello</servlet-name>
-  <servlet-class>view.MainWindowServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>Hello</servlet-name>
-  <url-pattern>/mainWindowServlet</url-pattern>
-</servlet-mapping>
 </web-app>
