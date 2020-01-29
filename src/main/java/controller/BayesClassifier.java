@@ -6,6 +6,8 @@ import model.enums.Inference;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Map.entry;
+
 public class BayesClassifier {
 
     private Map<Inference, GroupStats> groupStatsMap = new HashMap<>();
@@ -23,7 +25,7 @@ public class BayesClassifier {
     void classify(NormalizedWeatherCondition normalizedWeatherCondition) {
         Inference group = groupStatsMap.entrySet()
                 .stream()
-                .map(entry -> Map.entry(entry.getKey(), entry.getValue().calculateProximityFactor(normalizedWeatherCondition)))
+                .map(entry -> entry(entry.getKey(), entry.getValue().calculateProximityFactor(normalizedWeatherCondition)))
                 .max(Comparator.comparingDouble(Map.Entry::getValue)).orElseThrow().getKey();
         normalizedWeatherCondition.setInference(group);
     }
