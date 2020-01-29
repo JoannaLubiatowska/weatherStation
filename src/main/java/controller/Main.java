@@ -8,28 +8,25 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 public class Main {
-
-    private static List<WeatherCondition> weatherCondition;
-
     public static void main(String[] args) {
-        loadWeatherConditionData();
-//        ClassificationProblem problem = DataNormalizationProcesor.getClassification(weatherCondition);
-//
-//        BayesClassifier classifier = new BayesClassifier();
-//        classifier.configure(problem.getTrainingSet());
-//        System.out.println(classifier);
-//
-//        problem.getTestSet().forEach(classifier::classify);
-//        System.out.println(problem.getTestSet());
+        List<WeatherCondition> weatherCondition = loadWeatherConditionData();
+        ClassificationProblem problem = DataNormalizationProcesor.getClassification(weatherCondition);
+
+        BayesClassifier classifier = new BayesClassifier();
+        classifier.configure(problem.getTrainingSet());
+        System.out.println(classifier);
+
+        problem.getTestSet().forEach(classifier::classify);
+        System.out.println(problem.getTestSet());
     }
 
-    private static void loadWeatherConditionData() {
+    private static List<WeatherCondition> loadWeatherConditionData() {
+        List<WeatherCondition> weatherCondition;
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("weatherStationMavenWebapp");
         EntityManager em = factory.createEntityManager();
         weatherCondition = em.createQuery("SELECT d FROM WeatherCondition d", WeatherCondition.class).getResultList();
         weatherCondition.forEach(System.out::println);
         em.close();
+        return weatherCondition;
     }
-
-
 }

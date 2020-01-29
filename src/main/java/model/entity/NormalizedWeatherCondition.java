@@ -1,20 +1,27 @@
 package model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import model.entity.InferenceResult;
 import model.enums.AirHumidity;
 import model.enums.AirPressure;
+import model.enums.Inference;
 import model.enums.Temperature;
 
-import java.sql.Timestamp;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class NormalizedWeatherCondition {
-    private Timestamp measurementTime;
     private Temperature temperature;
     private AirHumidity airHumidity;
     private AirPressure airPressure;
-    private InferenceResult inferenceResult;
+    private Inference inference;
+
+    public NormalizedWeatherCondition(Temperature temperature, AirHumidity airHumidity, AirPressure airPressure) {
+        this.temperature = temperature;
+        this.airHumidity = airHumidity;
+        this.airPressure = airPressure;
+        this.inference = null;
+    }
 }
