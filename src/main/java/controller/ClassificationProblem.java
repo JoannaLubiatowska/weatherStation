@@ -1,6 +1,6 @@
 package controller;
 
-import model.entity.NormalizedWeatherCondition;
+import model.hibernate.entity.NormalizedWeatherCondition;
 
 import java.util.Set;
 

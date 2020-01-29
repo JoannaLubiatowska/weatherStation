@@ -9,8 +9,8 @@ complete transactions with the DB  -->
 	<!-- Define the class for Hibernate which implements JPA -->
 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 	<!-- Define the object that should be persisted in the database -->
-	<class>model.entity.WeatherCondition</class>
-	<class>model.entity.InferenceResult</class>
+	<class>model.hibernate.entity.WeatherCondition</class>
+	<class>model.hibernate.entity.InferenceResult</class>
 	<properties>
 		<!-- Driver for DB database -->
 		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

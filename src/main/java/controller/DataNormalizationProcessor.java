@@ -1,8 +1,8 @@
 package controller;
 
-import model.entity.InferenceResult;
-import model.entity.NormalizedWeatherCondition;
-import model.entity.WeatherCondition;
+import model.hibernate.entity.InferenceResult;
+import model.hibernate.entity.NormalizedWeatherCondition;
+import model.hibernate.entity.WeatherCondition;
 import model.enums.AirHumidity;
 import model.enums.AirPressure;
 import model.enums.Inference;
@@ -11,13 +11,16 @@ import model.enums.Temperature;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DataNormalizationProcesor {
+import static java.util.Collections.emptyList;
+
+public class DataNormalizationProcessor {
 
     public static ClassificationProblem getClassification(List<WeatherCondition> weatherCondition) {
         Map<Boolean, List<NormalizedWeatherCondition>> recordsMap = normalizeData(weatherCondition)
                 .stream()
                 .collect(Collectors.groupingBy(normalizedWeatherCondition -> Objects.isNull(normalizedWeatherCondition.getInference())));
-        return new ClassificationProblem(new HashSet<>(recordsMap.get(false)), new HashSet<>(recordsMap.get(true)));
+        return new ClassificationProblem(new HashSet<>(Optional.ofNullable(recordsMap.get(false)).orElse(emptyList())),
+                new HashSet<>(Optional.ofNullable(recordsMap.get(true)).orElse(emptyList())));
     }
 
     private static List<NormalizedWeatherCondition> normalizeData(List<WeatherCondition> weatherConditions) {
@@ -32,7 +35,7 @@ public class DataNormalizationProcesor {
                         normalizeAirHumidity(wc.getAirHumidity()), normalizeAirPressure(wc.getAirPressure())));
             }
         }
-        return new ArrayList<>();
+        return normalizedWeatherConditions;
     }
 
     private static Temperature normalizeTemperature(double value) {
@@ -73,12 +76,16 @@ public class DataNormalizationProcesor {
 
     private static Inference normalizeInferenceResult(InferenceResult inferenceResult) {
         Inference inference = null;
-        if(inferenceResult.getInferenceResultsName().equals("bad")) {
-            inference = Inference.BAD_WEATHER;
-        } else if (inferenceResult.getInferenceResultsName().equals("middle")) {
-            inference = Inference.MEDIUM_WEATHER;
-        } else if (inferenceResult.getInferenceResultsName().equals("good")) {
-            inference = Inference.GOOD_WEATHER;
+        switch (inferenceResult.getInferenceResultsName()) {
+            case "bad":
+                inference = Inference.BAD_WEATHER;
+                break;
+            case "middle":
+                inference = Inference.MEDIUM_WEATHER;
+                break;
+            case "good":
+                inference = Inference.GOOD_WEATHER;
+                break;
         }
         return inference;
     }

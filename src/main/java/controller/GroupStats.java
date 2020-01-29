@@ -1,6 +1,6 @@
 package controller;
 
-import model.entity.NormalizedWeatherCondition;
+import model.hibernate.entity.NormalizedWeatherCondition;
 import model.enums.AirHumidity;
 import model.enums.AirPressure;
 import model.enums.Temperature;

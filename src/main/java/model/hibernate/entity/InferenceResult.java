@@ -1,4 +1,4 @@
-package model.entity;
+package model.hibernate.entity;
 import lombok.*;
 
 import javax.persistence.*;

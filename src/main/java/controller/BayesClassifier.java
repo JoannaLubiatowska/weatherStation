@@ -1,7 +1,6 @@
 package controller;
 
-import model.entity.InferenceResult;
-import model.entity.NormalizedWeatherCondition;
+import model.hibernate.entity.NormalizedWeatherCondition;
 import model.enums.Inference;
 
 import java.util.*;
