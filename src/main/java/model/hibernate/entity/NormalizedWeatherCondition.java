@@ -11,7 +11,6 @@ import model.enums.Temperature;
 
 
 @Data
-@Builder
 @AllArgsConstructor
 @ToString
 public class NormalizedWeatherCondition {

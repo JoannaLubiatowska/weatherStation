@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Data
-@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +25,14 @@ public class WeatherCondition {
     @ManyToOne
     @JoinColumn(name = "inferenceResultsID")
     private InferenceResult inferenceResult;
+
+    public WeatherCondition(Timestamp measurementTime, double temperature, double airHumidity, double airPressure) {
+        this.measurementTime = measurementTime;
+        this.temperature = temperature;
+        this.airHumidity = airHumidity;
+        this.airPressure = airPressure;
+    }
 }
+
+
+

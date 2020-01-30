@@ -1,5 +1,6 @@
 package controller;
 
+import model.hibernate.entity.InferenceResult;
 import model.hibernate.entity.NormalizedWeatherCondition;
 import model.hibernate.entity.WeatherCondition;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 
 public class DataController {
 
+    private List<InferenceResult> inferenceResultList;
 //    public static void main(String[] args) {
 //        EntityManager entityManager = createEntityManager();
 //        weatherCondition = loadWeatherConditionData(entityManager);
@@ -26,8 +28,7 @@ public class DataController {
 //    }
 
     public static Set<NormalizedWeatherCondition> init() {
-        EntityManager entityManager = createEntityManager();
-        List<WeatherCondition> weatherCondition = loadWeatherConditionData(entityManager);
+        List<WeatherCondition> weatherCondition = loadWeatherConditionList();
         ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherCondition);
         BayesClassifier classifier = new BayesClassifier();
         classifier.configure(problem.getTrainingSet());
@@ -42,12 +43,22 @@ public class DataController {
         entityManager.close();
     }
 
-    private static List<WeatherCondition> loadWeatherConditionData(EntityManager entityManager) {
+    public static List<InferenceResult> loadInferenceResultList() {
+        EntityManager entityManager = createEntityManager();
+        List<InferenceResult> inferenceResult = new ArrayList<>();
+        inferenceResult = entityManager.createQuery("SELECT d FROM InferenceResult d", InferenceResult.class).getResultList();
+        entityManager.close();
+        return inferenceResult;
+    }
+
+    private static List<WeatherCondition> loadWeatherConditionList() {
+        EntityManager entityManager = createEntityManager();
         List<WeatherCondition> weatherCondition = new ArrayList<>();
         weatherCondition = entityManager.createQuery("SELECT d FROM WeatherCondition d", WeatherCondition.class).getResultList();
         entityManager.close();
         return weatherCondition;
     }
+
     private static EntityManager createEntityManager() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("weatherStationMavenWebapp");
         return factory.createEntityManager();
