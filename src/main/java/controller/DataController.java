@@ -1,8 +1,12 @@
 package controller;
 
+import model.hibernate.HibernateUtil;
 import model.hibernate.entity.InferenceResult;
 import model.hibernate.entity.NormalizedWeatherCondition;
 import model.hibernate.entity.WeatherCondition;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -51,11 +55,17 @@ public class DataController {
 
     private static void updateWeatherCondition(WeatherCondition weatherCondition, InferenceResult inferenceResult) {
         weatherCondition.setInferenceResult(inferenceResult);
-        EntityManager entityManager = createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.persist(weatherCondition);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(weatherCondition);
+        transaction.commit();
+        sessionFactory.close();
+//        EntityManager entityManager = createEntityManager();
+//        entityManager.getTransaction().begin();
+//        entityManager.persist(weatherCondition);
+//        entityManager.getTransaction().commit();
+//        entityManager.close();
     }
 
     public static void insertWeatherCondition(WeatherCondition weatherCondition) {

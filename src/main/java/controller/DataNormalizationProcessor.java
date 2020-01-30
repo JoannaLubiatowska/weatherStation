@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 
-public class DataNormalizationProcessor {
+class DataNormalizationProcessor {
 
-    public static ClassificationProblem getClassification(List<WeatherCondition> weatherCondition) {
+    static ClassificationProblem getClassification(List<WeatherCondition> weatherCondition) {
         Map<Boolean, List<NormalizedWeatherCondition>> recordsMap = normalizeData(weatherCondition)
                 .stream()
                 .collect(Collectors.groupingBy(normalizedWeatherCondition -> Objects.isNull(normalizedWeatherCondition.getInference())));
@@ -27,12 +27,16 @@ public class DataNormalizationProcessor {
         List<NormalizedWeatherCondition> normalizedWeatherConditions = new ArrayList<>();
         for(WeatherCondition wc : weatherConditions) {
             if(Objects.nonNull(wc.getInferenceResult())) {
-                normalizedWeatherConditions.add(new NormalizedWeatherCondition(normalizeTemperature(wc.getTemperature()),
-                        normalizeAirHumidity(wc.getAirHumidity()), normalizeAirPressure(wc.getAirPressure()),
+                normalizedWeatherConditions.add(new NormalizedWeatherCondition(wc.getWeatherConditionsID(),
+                        normalizeTemperature(wc.getTemperature()),
+                        normalizeAirHumidity(wc.getAirHumidity()),
+                        normalizeAirPressure(wc.getAirPressure()),
                         normalizeInferenceResult(wc.getInferenceResult())));
             } else {
-                normalizedWeatherConditions.add(new NormalizedWeatherCondition(normalizeTemperature(wc.getTemperature()),
-                        normalizeAirHumidity(wc.getAirHumidity()), normalizeAirPressure(wc.getAirPressure())));
+                normalizedWeatherConditions.add(new NormalizedWeatherCondition(wc.getWeatherConditionsID(),
+                        normalizeTemperature(wc.getTemperature()),
+                        normalizeAirHumidity(wc.getAirHumidity()),
+                        normalizeAirPressure(wc.getAirPressure())));
             }
         }
         return normalizedWeatherConditions;

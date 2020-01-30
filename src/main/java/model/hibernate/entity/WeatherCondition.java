@@ -22,7 +22,7 @@ public class WeatherCondition {
     private double airHumidity;
     private double airPressure;
     @ManyToOne
-    @JoinColumn(name = "inferenceResultsID")
+    @JoinColumn(name = "inferenceResultsID"/*, referencedColumnName = "inferenceResultsID"*/)
     private InferenceResult inferenceResult;
 
     public WeatherCondition(Timestamp measurementTime, double temperature, double airHumidity, double airPressure) {

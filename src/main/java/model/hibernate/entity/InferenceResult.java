@@ -17,6 +17,6 @@ public class InferenceResult {
     private String inferenceResultsName;
     private String inferenceResultsDescription;
     @ToString.Exclude
-    @OneToMany(mappedBy = "inferenceResult", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "inferenceResult", cascade = CascadeType.ALL)
     private final List<WeatherCondition> weatherConditionsList = new ArrayList<>();
 }
