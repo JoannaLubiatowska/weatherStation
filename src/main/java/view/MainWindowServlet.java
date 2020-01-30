@@ -22,10 +22,15 @@ public class MainWindowServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Set<NormalizedWeatherCondition> normalizedWeatherConditionSet = DataController.init();
-        for (NormalizedWeatherCondition normalizedWeatherCondition : normalizedWeatherConditionSet) {
-            response.getWriter().write(String.valueOf(normalizedWeatherCondition));
+        List<WeatherCondition> weatherConditionList = DataController.init();
+        if(weatherConditionList.size() > 0) {
+            for (WeatherCondition weatherCondition : weatherConditionList) {
+                response.getWriter().write(String.valueOf(weatherCondition));
+            }
+        } else {
+            response.getWriter().write("No data to process.");
         }
+
     }
 
     @Override

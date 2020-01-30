@@ -1,22 +1,20 @@
 package controller;
 
-import model.hibernate.HibernateUtil;
 import model.hibernate.entity.InferenceResult;
 import model.hibernate.entity.NormalizedWeatherCondition;
 import model.hibernate.entity.WeatherCondition;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class DataController {
     private static List<WeatherCondition> weatherConditionList;
-    private  static List<InferenceResult> inferenceResultList;
+    private static List<InferenceResult> inferenceResultList;
 //    public static void main(String[] args) {
 //        EntityManager entityManager = createEntityManager();
 //        weatherCondition = loadWeatherConditionData(entityManager);
@@ -30,42 +28,39 @@ public class DataController {
 //        System.out.println(problem.getTestSet());
 //    }
 
-    public static Set<NormalizedWeatherCondition> init() {
+    public static List<WeatherCondition> init() {
         weatherConditionList = loadWeatherConditionList();
         inferenceResultList = loadInferenceResultList();
         ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherConditionList);
         BayesClassifier classifier = new BayesClassifier();
         classifier.configure(problem.getTrainingSet());
         problem.getTestSet().forEach(classifier::classify);
-        Set<NormalizedWeatherCondition> normalizedWeatherConditionSet = problem.getTestSet();
-        adjustInterferenceToWeatherCondition(normalizedWeatherConditionSet);
-        return normalizedWeatherConditionSet;
+        return adjustInterferenceToWeatherCondition(problem.getTestSet());
     }
 
-    private static void adjustInterferenceToWeatherCondition(Set<NormalizedWeatherCondition> normalizedWeatherConditionSet) {
-        for(NormalizedWeatherCondition normalizedWeatherCondition : normalizedWeatherConditionSet) {
-            for(WeatherCondition weatherCondition : weatherConditionList) {
-                if(normalizedWeatherCondition.getWeatherConditionsID() == weatherCondition.getWeatherConditionsID()) {
+    private static List<WeatherCondition> adjustInterferenceToWeatherCondition(Set<NormalizedWeatherCondition> normalizedWeatherConditionSet) {
+        List<WeatherCondition> weatherConditionListAfterClassification = new ArrayList<>();
+        for (NormalizedWeatherCondition normalizedWeatherCondition : normalizedWeatherConditionSet) {
+            for (WeatherCondition weatherCondition : weatherConditionList) {
+                if (normalizedWeatherCondition.getWeatherConditionsID() == weatherCondition.getWeatherConditionsID()) {
                     int inferenceIndex = normalizedWeatherCondition.getInference().ordinal() + 1;
-                    updateWeatherCondition(weatherCondition, getInferenceResultByIndex(inferenceIndex));
+                    weatherConditionListAfterClassification.add(updateWeatherCondition(weatherCondition,
+                            getInferenceResultByIndex(inferenceIndex)));
                 }
             }
         }
+        return weatherConditionListAfterClassification;
     }
 
-    private static void updateWeatherCondition(WeatherCondition weatherCondition, InferenceResult inferenceResult) {
+    private static WeatherCondition updateWeatherCondition(WeatherCondition weatherCondition, InferenceResult inferenceResult) {
         weatherCondition.setInferenceResult(inferenceResult);
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(weatherCondition);
+        EntityManager entityManager = createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.merge(weatherCondition);
         transaction.commit();
-        sessionFactory.close();
-//        EntityManager entityManager = createEntityManager();
-//        entityManager.getTransaction().begin();
-//        entityManager.persist(weatherCondition);
-//        entityManager.getTransaction().commit();
-//        entityManager.close();
+        entityManager.close();
+        return weatherCondition;
     }
 
     public static void insertWeatherCondition(WeatherCondition weatherCondition) {
@@ -93,13 +88,17 @@ public class DataController {
     }
 
     private static InferenceResult getInferenceResultByIndex(int inferenceIndex) {
-        InferenceResult result = null;
+        EntityManager entityManager = createEntityManager();
+        return entityManager.createQuery("FROM InferenceResult ir WHERE ir.inferenceResultsID = :id", InferenceResult.class)
+                .setParameter("id", inferenceIndex)
+                .getSingleResult();
+        /*InferenceResult result = null;
         for(InferenceResult inferenceResult : inferenceResultList) {
            if(inferenceResult.getInferenceResultsID() == inferenceIndex) {
                result = inferenceResult;
            }
         }
-        return result;
+        return result;*/
     }
 
     private static EntityManager createEntityManager() {
