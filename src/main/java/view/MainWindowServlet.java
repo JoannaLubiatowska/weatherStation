@@ -22,36 +22,33 @@ public class MainWindowServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<WeatherCondition> weatherConditionList = DataController.init();
-        if(weatherConditionList.size() > 0) {
-            for (WeatherCondition weatherCondition : weatherConditionList) {
-                response.getWriter().write(String.valueOf(weatherCondition));
-            }
-        } else {
-            response.getWriter().write("No data to process.");
-        }
-
+        runClassification(response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            WeatherCondition weatherCondition = insertToDbNewWeatherCondition(request);
-            HttpSession session = request.getSession(true);
-            session.setAttribute("weatherCondition", weatherCondition);
-            response.sendRedirect(".");
-        } catch (Exception e) {
-            request.setAttribute("message", e.getMessage());
-            getServletContext().getRequestDispatcher("/").forward(request, response);
-        }
+        WeatherCondition weatherCondition = insertToDbNewWeatherCondition(request);
+        response.getWriter().write("Received: " + weatherCondition);
+        runClassification(response);
     }
 
     private WeatherCondition insertToDbNewWeatherCondition(HttpServletRequest request) {
-        WeatherCondition weatherCondition = new WeatherCondition(Timestamp.valueOf(request.getParameter("measurementTime").toString()),
-                Double.parseDouble(request.getParameter("temperature").toString()),
-                Double.parseDouble(request.getParameter("airHumidity").toString()),
-                Double.parseDouble(request.getParameter("airPressure").toString()));
+        WeatherCondition weatherCondition = new WeatherCondition(Timestamp.valueOf(request.getParameter("measurementTime")),
+                Double.parseDouble(request.getParameter("temperature")),
+                Double.parseDouble(request.getParameter("airHumidity")),
+                Double.parseDouble(request.getParameter("airPressure")));
         DataController.insertWeatherCondition(weatherCondition);
         return weatherCondition;
+    }
+
+    private void runClassification(HttpServletResponse response) throws IOException {
+        List<WeatherCondition> weatherConditionList = DataController.init();
+        if(weatherConditionList.size() > 0) {
+            for (WeatherCondition weatherCondition : weatherConditionList) {
+                response.getWriter().write("Classified and saved to Database: " + String.valueOf(weatherCondition));
+            }
+        } else {
+            response.getWriter().write("Server is working. No new data to process.");
+        }
     }
 }

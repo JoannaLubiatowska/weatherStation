@@ -14,23 +14,9 @@ import java.util.Set;
 
 public class DataController {
     private static List<WeatherCondition> weatherConditionList;
-    private static List<InferenceResult> inferenceResultList;
-//    public static void main(String[] args) {
-//        EntityManager entityManager = createEntityManager();
-//        weatherCondition = loadWeatherConditionData(entityManager);
-//        ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherCondition);
-//
-//        BayesClassifier classifier = new BayesClassifier();
-//        classifier.configure(problem.getTrainingSet());
-//        System.out.println(classifier);
-//
-//        problem.getTestSet().forEach(classifier::classify);
-//        System.out.println(problem.getTestSet());
-//    }
 
     public static List<WeatherCondition> init() {
         weatherConditionList = loadWeatherConditionList();
-        inferenceResultList = loadInferenceResultList();
         ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherConditionList);
         BayesClassifier classifier = new BayesClassifier();
         classifier.configure(problem.getTrainingSet());
@@ -71,14 +57,6 @@ public class DataController {
         entityManager.close();
     }
 
-    private static List<InferenceResult> loadInferenceResultList() {
-        EntityManager entityManager = createEntityManager();
-        List<InferenceResult> inferenceResult;
-        inferenceResult = entityManager.createQuery("SELECT d FROM InferenceResult d", InferenceResult.class).getResultList();
-        entityManager.close();
-        return inferenceResult;
-    }
-
     private static List<WeatherCondition> loadWeatherConditionList() {
         EntityManager entityManager = createEntityManager();
         List<WeatherCondition> weatherCondition;
@@ -92,13 +70,6 @@ public class DataController {
         return entityManager.createQuery("FROM InferenceResult ir WHERE ir.inferenceResultsID = :id", InferenceResult.class)
                 .setParameter("id", inferenceIndex)
                 .getSingleResult();
-        /*InferenceResult result = null;
-        for(InferenceResult inferenceResult : inferenceResultList) {
-           if(inferenceResult.getInferenceResultsID() == inferenceIndex) {
-               result = inferenceResult;
-           }
-        }
-        return result;*/
     }
 
     private static EntityManager createEntityManager() {
