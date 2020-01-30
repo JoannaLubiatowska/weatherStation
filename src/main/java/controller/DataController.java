@@ -1,5 +1,6 @@
 package controller;
 
+import model.hibernate.entity.NormalizedWeatherCondition;
 import model.hibernate.entity.WeatherCondition;
 
 import javax.persistence.EntityManager;
@@ -7,34 +8,43 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class MainController {
-    private static List<WeatherCondition> weatherCondition;
-    public static void main(String[] args) {
+public class DataController {
+
+//    public static void main(String[] args) {
+//        EntityManager entityManager = createEntityManager();
+//        weatherCondition = loadWeatherConditionData(entityManager);
+//        ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherCondition);
+//
+//        BayesClassifier classifier = new BayesClassifier();
+//        classifier.configure(problem.getTrainingSet());
+//        System.out.println(classifier);
+//
+//        problem.getTestSet().forEach(classifier::classify);
+//        System.out.println(problem.getTestSet());
+//    }
+
+    public static Set<NormalizedWeatherCondition> init() {
         EntityManager entityManager = createEntityManager();
-        weatherCondition = loadWeatherConditionData(entityManager);
+        List<WeatherCondition> weatherCondition = loadWeatherConditionData(entityManager);
         ClassificationProblem problem = DataNormalizationProcessor.getClassification(weatherCondition);
-
         BayesClassifier classifier = new BayesClassifier();
         classifier.configure(problem.getTrainingSet());
-        System.out.println(classifier);
-
         problem.getTestSet().forEach(classifier::classify);
-        System.out.println(problem.getTestSet());
+        return problem.getTestSet();
     }
 
-    private static void refreshData(EntityManager entityManager) {
-        List<WeatherCondition> refreshedWeatherCondition = loadWeatherConditionData(entityManager);
-        //entityManager.getTransaction().
-        if(refreshedWeatherCondition.size() > weatherCondition.size()) {
-
-        }
+    private static void insertWeatherCondition(EntityManager entityManager, WeatherCondition weatherCondition) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(weatherCondition);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     private static List<WeatherCondition> loadWeatherConditionData(EntityManager entityManager) {
         List<WeatherCondition> weatherCondition = new ArrayList<>();
         weatherCondition = entityManager.createQuery("SELECT d FROM WeatherCondition d", WeatherCondition.class).getResultList();
-        //weatherCondition.forEach(System.out::println);
         entityManager.close();
         return weatherCondition;
     }

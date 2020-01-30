@@ -1,4 +1,6 @@
 package view;
+import controller.DataController;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -13,6 +15,6 @@ public class MainWindowServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-          response.getWriter().write("Hello ");
+          response.getWriter().write(String.valueOf(DataController.init()));
     }
 }

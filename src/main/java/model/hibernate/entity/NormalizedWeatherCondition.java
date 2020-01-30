@@ -3,6 +3,7 @@ package model.hibernate.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 import model.enums.AirHumidity;
 import model.enums.AirPressure;
 import model.enums.Inference;
@@ -12,6 +13,7 @@ import model.enums.Temperature;
 @Data
 @Builder
 @AllArgsConstructor
+@ToString
 public class NormalizedWeatherCondition {
     private Temperature temperature;
     private AirHumidity airHumidity;
