@@ -31,7 +31,7 @@ public class MainWindowServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            WeatherCondition weatherCondition = fillNewWeatherCondition(request);
+            WeatherCondition weatherCondition = insertToDbNewWeatherCondition(request);
             HttpSession session = request.getSession(true);
             session.setAttribute("weatherCondition", weatherCondition);
             response.sendRedirect(".");
@@ -41,10 +41,12 @@ public class MainWindowServlet extends HttpServlet {
         }
     }
 
-    private WeatherCondition fillNewWeatherCondition(HttpServletRequest request) {
-    return new WeatherCondition(Timestamp.valueOf(request.getParameter("measurementTime").toString()),
+    private WeatherCondition insertToDbNewWeatherCondition(HttpServletRequest request) {
+        WeatherCondition weatherCondition = new WeatherCondition(Timestamp.valueOf(request.getParameter("measurementTime").toString()),
                 Double.parseDouble(request.getParameter("temperature").toString()),
                 Double.parseDouble(request.getParameter("airHumidity").toString()),
                 Double.parseDouble(request.getParameter("airPressure").toString()));
+        DataController.insertWeatherCondition(weatherCondition);
+        return weatherCondition;
     }
 }

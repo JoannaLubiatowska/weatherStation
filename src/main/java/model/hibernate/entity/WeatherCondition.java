@@ -1,7 +1,6 @@
 package model.hibernate.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +16,7 @@ public class WeatherCondition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int weatherConditionsID;
+    private Integer weatherConditionsID;
     private Timestamp measurementTime;
     private double temperature;
     private double airHumidity;

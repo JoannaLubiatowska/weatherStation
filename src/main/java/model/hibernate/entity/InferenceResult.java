@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +13,7 @@ import java.util.List;
 public class InferenceResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int inferenceResultsID;
+    private Integer inferenceResultsID;
     private String inferenceResultsName;
     private String inferenceResultsDescription;
     @ToString.Exclude
