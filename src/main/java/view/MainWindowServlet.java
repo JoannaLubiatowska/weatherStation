@@ -1,24 +1,24 @@
 package view;
-import controller.DataController;
-import model.hibernate.entity.InferenceResult;
-import model.hibernate.entity.NormalizedWeatherCondition;
-import model.hibernate.entity.WeatherCondition;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Set;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import controller.DataController;
+import model.hibernate.entity.WeatherCondition;
+import notifier.NotifierService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 @WebServlet("/mainWindowServlet")
 public class MainWindowServlet extends HttpServlet {
+
+    private NotifierService notifierService = new NotifierService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -30,6 +30,11 @@ public class MainWindowServlet extends HttpServlet {
         WeatherCondition weatherCondition = insertToDbNewWeatherCondition(request);
         response.getWriter().write("Received: " + weatherCondition);
         runClassification(response);
+        try {
+            notifierService.notifyLastConditionBefore(new Date());
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     private WeatherCondition insertToDbNewWeatherCondition(HttpServletRequest request) {

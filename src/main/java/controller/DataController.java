@@ -4,13 +4,8 @@ import model.hibernate.entity.InferenceResult;
 import model.hibernate.entity.NormalizedWeatherCondition;
 import model.hibernate.entity.WeatherCondition;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
 
 public class DataController {
     private static List<WeatherCondition> weatherConditionList;
@@ -28,7 +23,7 @@ public class DataController {
         List<WeatherCondition> weatherConditionListAfterClassification = new ArrayList<>();
         for (NormalizedWeatherCondition normalizedWeatherCondition : normalizedWeatherConditionSet) {
             for (WeatherCondition weatherCondition : weatherConditionList) {
-                if (normalizedWeatherCondition.getWeatherConditionsID() == weatherCondition.getWeatherConditionsID()) {
+                if (normalizedWeatherCondition.getWeatherConditionsID().equals(weatherCondition.getWeatherConditionsID())) {
                     int inferenceIndex = normalizedWeatherCondition.getInference().ordinal() + 1;
                     weatherConditionListAfterClassification.add(updateWeatherCondition(weatherCondition,
                             getInferenceResultByIndex(inferenceIndex)));
@@ -70,6 +65,13 @@ public class DataController {
         return entityManager.createQuery("FROM InferenceResult ir WHERE ir.inferenceResultsID = :id", InferenceResult.class)
                 .setParameter("id", inferenceIndex)
                 .getSingleResult();
+    }
+
+    public static Optional<WeatherCondition> findLastClassifiedConditionBefore(Date fireTime) {
+        TypedQuery<WeatherCondition> query = createEntityManager().createQuery("FROM WeatherCondition wc WHERE wc.measurementTime < :date AND wc.inferenceResult != null ORDER BY wc.measurementTime DESC", WeatherCondition.class);
+        query.setParameter("date", fireTime);
+        query.setMaxResults(1);
+        return query.getResultList().stream().findFirst();
     }
 
     private static EntityManager createEntityManager() {
