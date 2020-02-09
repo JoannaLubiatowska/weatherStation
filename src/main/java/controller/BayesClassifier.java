@@ -25,8 +25,10 @@ public class BayesClassifier {
     void classify(NormalizedWeatherCondition normalizedWeatherCondition) {
         Inference group = groupStatsMap.entrySet()
                 .stream()
-                .map(entry -> entry(entry.getKey(), entry.getValue().calculateProximityFactor(normalizedWeatherCondition)))
-                .max(Comparator.comparingDouble(Map.Entry::getValue)).orElseThrow().getKey();
+                .map(entry -> entry(entry.getKey(), entry.getValue()
+                        .calculateProximityFactor(normalizedWeatherCondition)))
+                .max(Comparator.comparingDouble(Map.Entry::getValue))
+                .orElseThrow().getKey();
         normalizedWeatherCondition.setInference(group);
     }
 

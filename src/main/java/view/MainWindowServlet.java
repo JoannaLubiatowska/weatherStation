@@ -18,7 +18,7 @@ import java.util.List;
 @WebServlet("/mainWindowServlet")
 public class MainWindowServlet extends HttpServlet {
 
-    private NotifierService notifierService = new NotifierService();
+    private NotifierService notifierService = NotifierService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -47,7 +47,7 @@ public class MainWindowServlet extends HttpServlet {
     }
 
     private void runClassification(HttpServletResponse response) throws IOException {
-        List<WeatherCondition> weatherConditionList = DataController.init();
+        List<WeatherCondition> weatherConditionList = DataController.classifyData();
         if(weatherConditionList.size() > 0) {
             for (WeatherCondition weatherCondition : weatherConditionList) {
                 response.getWriter().write("Classified and saved to Database: " + String.valueOf(weatherCondition));

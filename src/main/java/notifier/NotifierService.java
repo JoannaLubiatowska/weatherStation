@@ -14,6 +14,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NotifierService {
 
+    private static NotifierService instance;
+
+    public static NotifierService getInstance() {
+        return instance != null ? instance : (instance = new NotifierService());
+    }
+
     public void notifyLastConditionBefore(Date fireTime) throws FirebaseMessagingException {
         Optional<WeatherCondition> lastCondition = DataController.findLastClassifiedConditionBefore(fireTime);
         if (lastCondition.isPresent()) {
